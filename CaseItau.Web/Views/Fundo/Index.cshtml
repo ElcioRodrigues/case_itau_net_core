@@ -1,0 +1,63 @@
+﻿@model List<FundoVM>
+
+@{
+    ViewData["Title"] = "Fundos de investimento";
+    List<FundoVM> fundos = Model ?? [];
+}
+
+<div class="text-center">
+    <h1 class="display-4">Fundos</h1>
+    <p>
+        @Html.ActionLink("Criar novo fundo de investimento", "Create")
+    </p>
+    <table class="table" style="text-align: left;">
+        <tr>
+            <th>
+                Código
+            </th>
+            <th>
+                Nome
+            </th>
+            <th>
+                Cnpj
+            </th>
+            <th>
+                Tipo
+            </th>
+            <th>
+                Patrimônio
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in fundos)
+        {
+            <tr>
+                <td>
+                    @item.Codigo.ToString()
+                </td>
+                <td>
+                    @item.Nome
+                </td>
+                <td>
+                    @item.Cnpj
+                </td>
+                <td>
+                    @item.Tipo?.Nome
+                </td>
+                <td>
+                    @item.Patrimonio.GetValueOrDefault(Decimal.Zero).ToString("C")
+                </td>
+                <td style="text-align: center;">
+                    @Html.ActionLink("Alterar", "Edit", new { code = item.Codigo }) |
+                    @Html.ActionLink("Visualizar", "Details", new { code = item.Codigo }) |
+                    @Html.ActionLink("Alterar Patrimônio", "EditPatrimonio", new { code = item.Codigo }) |
+                    @Html.ActionLink("Apagar", "Delete", new { code = item.Codigo })
+                </td>
+            </tr>
+        }
+    </table>
+
+</div>
+
+

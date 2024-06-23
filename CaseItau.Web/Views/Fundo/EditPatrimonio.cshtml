@@ -1,0 +1,45 @@
+﻿@model FundoVM
+
+@{
+    ViewData["Title"] = "Editar patrimônio";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Fundo de investimento</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-md-2">
+                    @Html.Label("lblCodigo", "Código", new { @class = "form-control-label" })
+                    @Html.TextBox("txtCodigo", Model.Codigo, new { @class = "form-control", @disabled = "disabled" })
+                    @Html.Hidden("code", Model.Codigo)
+                </div>
+                <div class="col-md-6">
+                    @Html.Label("lblNome", "Nome", new { @class = "form-control-label" })
+                    @Html.TextBoxFor(m => m.Nome, new { @class = "form-control", @disabled = "disabled" })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.Label("lblPatrimonio", "Patrimônio", new { @class = "form-control-label" })
+                    @Html.TextBoxFor(m => m.Patrimonio, new { @class = "form-control decimal" })
+                </div>
+            </div>
+
+            <div class="row" style="    margin-top: 20px;">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Salvar" class="btn btn-success" />
+                    <a href="@Url.Action("Index")" class="btn btn-primary">Voltar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

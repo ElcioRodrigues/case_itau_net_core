@@ -6,6 +6,12 @@ using CaseItau.API.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SQLite;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using CaseItau.Service;
+using static System.Reflection.Metadata.BlobBuilder;
+using AutoMapper;
+using CaseItau.Domain;
+using CaseItau.Domain.Common;
 
 namespace CaseItau.API.Controllers
 {
@@ -13,100 +19,96 @@ namespace CaseItau.API.Controllers
     [ApiController]
     public class FundoController : ControllerBase
     {
-        // GET: api/Fundo
-        [HttpGet]
-        public IEnumerable<Fundo> Get()
+        private readonly IFundoService _fundoService;
+        private readonly ITipoFundoService _tipoFundoService;
+        private readonly IMapper _mapper;
+
+        public FundoController(
+            IFundoService fundoService,
+            IMapper mapper,
+            ITipoFundoService tipoFundoService)
         {
-            var lista = new List<Fundo>();
-            var con = new SQLiteConnection("Data Source=dbCaseItau.s3db");
-            con.Open();
-            var cmd = con.CreateCommand();
-            cmd.CommandText = "SELECT F.*, T.NOME AS NOME_TIPO FROM FUNDO F INNER JOIN TIPO_FUNDO T ON T.CODIGO = F.CODIGO_TIPO";
-            cmd.CommandType = System.Data.CommandType.Text;
-            var reader = cmd.ExecuteReader();
-            while(reader.Read())
-            {
-                var f = new Fundo();
-                f.Codigo = reader[0].ToString();
-                f.Nome = reader[1].ToString();
-                f.Cnpj = reader[2].ToString();
-                f.CodigoTipo = int.Parse(reader[3].ToString());
-                f.Patrimonio = decimal.Parse(reader[4].ToString());
-                f.NomeTipo = reader[5].ToString();                
-                lista.Add(f);
-            }
-            return lista;
+            _fundoService = fundoService;
+            _mapper = mapper;
+            _tipoFundoService = tipoFundoService;
+        }
+
+        // GET: api/Fundo/GetAll
+        [HttpGet("GetAll", Name = "GetAll")]
+        public async Task<IEnumerable<FundoVM>> GetAllAsync()
+        {
+            var fundos = await _fundoService.GetAllAsync();
+            var responseVW = _mapper.Map<IEnumerable<FundoVM>>(fundos);
+            return responseVW;
         }
 
         // GET: api/Fundo/ITAUTESTE01
         [HttpGet("{codigo}", Name = "Get")]
-        public Fundo Get(string codigo)
+        public async Task<FundoVM> GetAsync(string codigo)
         {
-            var con = new SQLiteConnection("Data Source=dbCaseItau.s3db");
-            con.Open();
-            var cmd = con.CreateCommand();
-            cmd.CommandText = "SELECT F.*, T.NOME AS NOME_TIPO FROM FUNDO F INNER JOIN TIPO_FUNDO T ON T.CODIGO = F.CODIGO_TIPO WHERE F.CODIGO = '" + codigo + "'";
-            cmd.CommandType = System.Data.CommandType.Text;
-            var reader = cmd.ExecuteReader();
-            if (reader.Read())
-            {
-                var f = new Fundo();
-                f.Codigo = reader[0].ToString();
-                f.Nome = reader[1].ToString();
-                f.Cnpj = reader[2].ToString();
-                f.CodigoTipo = int.Parse(reader[3].ToString());
-                f.Patrimonio = decimal.Parse(reader[4].ToString());
-                f.NomeTipo = reader[5].ToString();
-                return f;
-            }
-            return null;
+            var fundo = await _fundoService.FindAsync(codigo);
+            var responseVW = _mapper.Map<FundoVM>(fundo);
+            return responseVW;
+        }
+
+        // GET: api/Fundo/GetAllTiposFundo
+        [HttpGet("GetAllTiposFundo", Name = "GetAllTiposFundo")]
+        public async Task<IEnumerable<TipoFundoVM>> GetAllTiposFundoAsync()
+        {
+            var tipos = await _tipoFundoService.GetAllAsync();
+            var responseVW = _mapper.Map<IEnumerable<TipoFundoVM>>(tipos);
+            return responseVW;
         }
 
         // POST: api/Fundo
         [HttpPost]
-        public void Post([FromBody] Fundo value)
+        public async Task<IActionResult> Post([FromBody] FundoVM value)
         {
-            var con = new SQLiteConnection("Data Source=dbCaseItau.s3db");
-            con.Open();
-            var cmd = con.CreateCommand();
-            cmd.CommandText = "INSERT INTO FUNDO VALUES('" + value.Codigo + "','" + value.Nome + "','" + value.Cnpj + "',"+value.CodigoTipo.ToString() + ",NULL)";
-            cmd.CommandType = System.Data.CommandType.Text;
-            var resultado = cmd.ExecuteNonQuery();
+            var fundo = _mapper.Map<Fundo>(value);
+            var result = await _fundoService.InsertAsync(fundo);
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
         // PUT: api/Fundo/ITAUTESTE01
         [HttpPut("{codigo}")]
-        public void Put(string codigo, [FromBody] Fundo value)
+        public async Task<IActionResult> Put(string codigo, [FromBody] FundoVM value)
         {
-            var con = new SQLiteConnection("Data Source=dbCaseItau.s3db");
-            con.Open();
-            var cmd = con.CreateCommand();
-            cmd.CommandText = "UPDATE FUNDO SET Nome = '" + value.Nome + "', CNPJ = '" + value.Cnpj + "', CODIGO_TIPO = " + value.CodigoTipo + " WHERE CODIGO = '" + codigo + "'";
-            cmd.CommandType = System.Data.CommandType.Text;
-            var resultado = cmd.ExecuteNonQuery();
+            value.Codigo = codigo;
+            var fundo = _mapper.Map<Fundo>(value);
+            var result = await _fundoService.UpdateAsync(fundo);
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
         // DELETE: api/Fundo/ITAUTESTE01
         [HttpDelete("{codigo}")]
-        public void Delete(string codigo)
+        public async Task<IActionResult> Delete(string codigo)
         {
-            var con = new SQLiteConnection("Data Source=dbCaseItau.s3db");
-            con.Open();
-            var cmd = con.CreateCommand();
-            cmd.CommandText = "DELETE FROM FUNDO WHERE CODIGO = '" + codigo + "'";
-            cmd.CommandType = System.Data.CommandType.Text;
-            var resultado = cmd.ExecuteNonQuery();
+            var result = await _fundoService.DeleteAsync(codigo);
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
+        // PUT: api/Fundo/ITAUTESTE01/patrimonio
         [HttpPut("{codigo}/patrimonio")]
-        public void MovimentarPatrimonio(string codigo, [FromBody] decimal value)
+        public async Task<IActionResult> MovimentarPatrimonio(string codigo, [FromBody] decimal value)
         {
-            var con = new SQLiteConnection("Data Source=dbCaseItau.s3db");
-            con.Open();
-            var cmd = con.CreateCommand();
-            cmd.CommandText = "UPDATE FUNDO SET PATRIMONIO = IFNULL(PATRIMONIO,0) + " + value.ToString() + " WHERE CODIGO = '" + codigo + "'";
-            cmd.CommandType = System.Data.CommandType.Text;
-            var resultado = cmd.ExecuteNonQuery();
+            var result = await _fundoService.MoveAssetsAsync(codigo, value);
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
     }
 }

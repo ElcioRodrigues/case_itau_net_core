@@ -1,9 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30104.148
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaseItau.API", "CaseItau.API\CaseItau.API.csproj", "{3707953F-0288-465D-93BC-790A4E80D734}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaseItau.API", "CaseItau.API\CaseItau.API.csproj", "{3707953F-0288-465D-93BC-790A4E80D734}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaseItau.Domain", "CaseItau.Domain\CaseItau.Domain.csproj", "{6435D39E-EBD1-4B9C-83C2-E1C959E25E28}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaseItau.Infra.Data", "CaseItau.Repository\CaseItau.Infra.Data.csproj", "{95B3EBFB-7543-4C3A-B761-BF8BB5974E96}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CaseItau.Service", "CaseItau.Service\CaseItau.Service.csproj", "{D70F6FFE-1774-42FF-A8BC-ECADF2DF609E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaseItau.Web", "CaseItau.Web\CaseItau.Web.csproj", "{71AE4CF1-415B-4BA9-9F0C-7D5ACE099731}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +23,22 @@ Global
 		{3707953F-0288-465D-93BC-790A4E80D734}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3707953F-0288-465D-93BC-790A4E80D734}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3707953F-0288-465D-93BC-790A4E80D734}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6435D39E-EBD1-4B9C-83C2-E1C959E25E28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6435D39E-EBD1-4B9C-83C2-E1C959E25E28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6435D39E-EBD1-4B9C-83C2-E1C959E25E28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6435D39E-EBD1-4B9C-83C2-E1C959E25E28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95B3EBFB-7543-4C3A-B761-BF8BB5974E96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95B3EBFB-7543-4C3A-B761-BF8BB5974E96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95B3EBFB-7543-4C3A-B761-BF8BB5974E96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95B3EBFB-7543-4C3A-B761-BF8BB5974E96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D70F6FFE-1774-42FF-A8BC-ECADF2DF609E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D70F6FFE-1774-42FF-A8BC-ECADF2DF609E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D70F6FFE-1774-42FF-A8BC-ECADF2DF609E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D70F6FFE-1774-42FF-A8BC-ECADF2DF609E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71AE4CF1-415B-4BA9-9F0C-7D5ACE099731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71AE4CF1-415B-4BA9-9F0C-7D5ACE099731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71AE4CF1-415B-4BA9-9F0C-7D5ACE099731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71AE4CF1-415B-4BA9-9F0C-7D5ACE099731}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

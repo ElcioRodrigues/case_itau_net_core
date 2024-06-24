@@ -14,7 +14,7 @@ namespace CaseItau.Infra.Data.Mapping
     {
         public FundoMap(EntityTypeBuilder<Fundo> entityBuilder) {
 
-            entityBuilder.HasKey(t => new { t.Codigo, t.CodigoTipo });
+            entityBuilder.HasKey(t => new { t.Codigo });
             entityBuilder.HasOne(t => t.Tipo).WithMany(t => t.Fundos).HasForeignKey(t => t.CodigoTipo);
 
         }

@@ -33,7 +33,7 @@
             <div class="row">
                 <div class="col-md-2">
                     @Html.Label("lblTipo", "Tipo", new { @class = "form-control-label" })<br />
-                    @Html.DropDownListFor(model => model.CodigoTipo, ViewBag.ListTipo as List<SelectListItem>, new { @class = "form-control", @required = "required", @name = "_CodigoTipo", @id = "_CodigoTipo", @disabled = "disabled"  })
+                    @Html.DropDownListFor(model => model.CodigoTipo, ViewBag.ListTipo as List<SelectListItem>, new { @class = "form-control", @required = "required", @name = "_CodigoTipo", @id = "_CodigoTipo"  })
                     @Html.HiddenFor(m => m.CodigoTipo)
                 </div>
                 <div class="col-md-3">

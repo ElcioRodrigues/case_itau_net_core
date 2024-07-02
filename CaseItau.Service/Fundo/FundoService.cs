@@ -4,14 +4,7 @@ using CaseItau.Infra.Data.Repository;
 using CaseItau.Infra.Data.UoW;
 using CaseItau.Service.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CaseItau.Service
 {
@@ -33,23 +26,12 @@ namespace CaseItau.Service
         }
 
         public async Task<IList<Fundo>> GetAllAsync()
-          => await _repository.Get()
-              .Include(x => x.Tipo).OrderBy(x => x.Codigo).ToListAsync();
-
-        public override async Task<Fundo?> FindAsync(object keyValue)
-        {
-            var fundo = await _repository.Get()
-                .Include(x => x.Tipo)
-                .Where(b => b.Codigo == (string)keyValue)
-                .FirstOrDefaultAsync();
-
-            return fundo;
-        }
+          => await _fundoRepository.GetAllAsync();
 
         public async Task<Result> MoveAssetsAsync(object keyValue, decimal value)
         {
             var result = new Result();
-            var fundo = await FindAsync(keyValue);
+            var fundo = await _fundoRepository.FindAsync(x => x.Codigo == (string)keyValue);
             if (fundo == null)
             {
                 result.Messages.Add("Registro não existe!");
@@ -73,14 +55,14 @@ namespace CaseItau.Service
             if (!result.Success)
                 return result;
 
-            var fundo = await FindAsync(entity.Codigo);
+            var fundo = await _fundoRepository.FindAsync(x => x.Codigo == entity.Codigo);
             if (fundo != null)
             {
                 result.Messages.Add("Já existe um fundo de investimento com esse código!");
                 return result;
             }
 
-            await _repository.InsertAsync(entity);
+            await _fundoRepository.InsertAsync(entity);
             result.SuccessMessage = "Fundo cadastrado com sucesso!";
             return result;
         }
@@ -100,13 +82,13 @@ namespace CaseItau.Service
             {
                 result.Messages.Add("O campo <Cnpj> é obrigatório!");
             }
-            var fundoTipo = await _tipoFundoService.FindAsync(entity.CodigoTipo);
+            var fundoTipo = await _tipoFundoService.FindAsync(x => x.Codigo == entity.CodigoTipo);
             if (fundoTipo == null)
             {
                 result.Messages.Add("O campo <CodigoTipo> informado é inválido!");
             }
 
-            var fundo = await _repository.Get()
+            var fundo = await _fundoRepository.Get()
                .Where(b => b.Cnpj == entity.Cnpj)
                .FirstOrDefaultAsync();
 
@@ -124,7 +106,7 @@ namespace CaseItau.Service
             if (!result.Success)
                 return result;
 
-            var fundo = await FindAsync(entity.Codigo);
+            var fundo = await _fundoRepository.FindAsync(x => x.Codigo == entity.Codigo);
             if (fundo == null)
             {
                 result.Messages.Add("Registro não existe!");
@@ -136,7 +118,7 @@ namespace CaseItau.Service
             fundo.Nome = entity.Nome;
             fundo.CodigoTipo = entity.CodigoTipo;
 
-            await _repository.UpdateAsync(fundo);
+            await _fundoRepository.UpdateAsync(fundo);
             result.SuccessMessage = "Fundo cadastrado com sucesso!";
             return result;
         }
@@ -144,13 +126,13 @@ namespace CaseItau.Service
         public override async Task<Result> DeleteAsync(object keyValue)
         {
             var result = new Result();
-            var fundo = await FindAsync(keyValue);
+            var fundo = await _fundoRepository.FindAsync(x => x.Codigo == (string)keyValue);
             if (fundo == null)
             {
                 result.Messages.Add("Registro não existe!");
                 return result;
             }
-            await _repository.DeleteAsync(fundo);
+            await _fundoRepository.DeleteAsync(fundo);
             return result;
         }
 

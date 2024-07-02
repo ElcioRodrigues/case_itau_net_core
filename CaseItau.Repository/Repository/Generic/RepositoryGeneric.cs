@@ -20,12 +20,10 @@ namespace CaseItau.Infra.Data.Repository
             _dbSet = _context.Set<TEntity>();
         }
 
-
-
         public async Task<TEntity> FindAsync(params object[] keyValues) => await FindAsync(keyValues);
 
 
-        public async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> filter)
+        public virtual async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> filter)
         {
             var query = _dbSet.AsQueryable();
 

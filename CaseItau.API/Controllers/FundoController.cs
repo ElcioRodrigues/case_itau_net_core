@@ -44,18 +44,22 @@ namespace CaseItau.API.Controllers
 
         // GET: api/Fundo/ITAUTESTE01
         [HttpGet("{codigo}", Name = "Get")]
-        public async Task<FundoVM> GetAsync(string codigo)
+        public async Task<IActionResult> GetAsync(string codigo)
         {
-            var fundo = await _fundoService.FindAsync(codigo);
+            var fundo = await _fundoService.FindAsync(x => x.Codigo == codigo);
+            if (fundo == null)
+            {
+                return NotFound();
+            }
             var responseVW = _mapper.Map<FundoVM>(fundo);
-            return responseVW;
+            return Ok(responseVW);
         }
 
         // GET: api/Fundo/GetAllTiposFundo
         [HttpGet("GetAllTiposFundo", Name = "GetAllTiposFundo")]
         public async Task<IEnumerable<TipoFundoVM>> GetAllTiposFundoAsync()
         {
-            var tipos = await _tipoFundoService.GetAllAsync();
+            var tipos = await _tipoFundoService.GetAsync(x => x.Codigo);
             var responseVW = _mapper.Map<IEnumerable<TipoFundoVM>>(tipos);
             return responseVW;
         }
